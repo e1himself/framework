@@ -15,17 +15,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
-
-      # @see https://github.com/actions/virtual-environments/issues/1918#issuecomment-717878289
-      - name: Free Up Memory
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-
-      - name: Install Swoole
-        run:  yes Y | pecl install swoole
+          extensions:  swoole
+          coverage:    none
 
       - name: Update Composer
         run:  composer self-update
