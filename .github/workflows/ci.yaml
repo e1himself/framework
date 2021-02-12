@@ -1,0 +1,35 @@
+on: push
+name: Test
+jobs:
+  test:
+    name:    Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['7.1', '7.2']
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions:  swoole
+          coverage:    none
+
+      - name: Update Composer
+        run:  composer self-update
+
+      - name: Install Dependencies
+        run:  composer update
+
+      - name: Test
+        run:  vendor/bin/phpunit
+
+      - name: Upload Coverage Report
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+
